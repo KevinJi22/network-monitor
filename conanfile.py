@@ -1,4 +1,4 @@
-from conans import ConanFile
+from conans import ConanFile, CMake
 
 class ConanPackage(ConanFile):
     name = 'network-monitor'
@@ -6,4 +6,12 @@ class ConanPackage(ConanFile):
 
     generators = 'cmake_find_package'
 
-    requires = []
+    requires = [
+        ('boost/1.74.0'),
+    ]
+    
+    # download Boost static libraries instead of shared ones
+    # this embeds library code into executable and prevents us from needing to install the shared library files
+    default_options = (
+        'boost:shared=False',
+    )

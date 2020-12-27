@@ -43,6 +43,13 @@
 * STOMP defines a protocol for clients and servers to communicate.
   * it defines a few frame types that are mapped onto WebSockets frames, like connect, subscribe, unsubscribe, send, etc.
 
+#### WebSockets
+
+* WebSockets are another kind of application layer protocol that also use TCP to transport packets but are slightly different from HTTP in some aspects.
+* WebSockets connections are long-lived because once a connection is established between client and server, there is no need for more handshakes to keep it alive. 
+* HTTP either closes the connection after the message is sent or keeps it open but requires more handshakes. This causes additional overhead.
+* WebSockets connections are **bi-directional** because both the client and server can send messages, and they are **full-duplex** because messages can be exchanged in both directions, at the same time, on the same channel.
+
 #### Requirements
 
 * what we need to build
