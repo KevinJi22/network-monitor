@@ -80,3 +80,28 @@
   * integration and stress test
   * easy to maintain, need solid build system and automated deployment pipeline
 * open questions
+
+#### Boost Asynchronous operations
+
+* I/O context is useful because you can leave it running in the background, interacting with low-level I/O interfaces, while the program works on something else
+* when the I/O objects complete some work, they notify the I/O context, which notifies you
+* Synchronous example for `socket.connect`:
+  1. the `connect` function talks to the `io_context` object
+  2. the `io_context` object talks to the TCP socket interface to connect to an endpoint
+  3. when the connection completes or fails, the TCP socket replies directly the the I/O context, which receives the response
+  4. the I/O context forwards the response back to us through the `error_code` variable.
+
+* in the case of asynchronous calls, we pass a __callback handler__ to the function instead of receiving the result in the `error_code` argument.
+
+**Note: when using the asynchronous APIs of an I/O object, we have to call `io_context::run` at least once, otherwise the asynchronous callbacks have no context in which to run.**
+
+* the I/O context `run()` function returns when there is no work left to do.
+* the `run()` function provides a context to run asynchronous callbacks for I/O objects. If using threads, the `run()` function runs in a different thread than `main`.
+* this gives us control over **how many resources we give to the I/O context**.
+* if you call the `run` functino from the _same_ `io_context` instance in multiple threads, then every thread will be an independent execution loop that all communicate with the same underlying I/O object.
+* for example, a TCP socket can be made to accept many connections on the same endpoint from multiple threads.
+* this can be problematic when it comes to **synchronization between multiple threads accessing the same shared resource**.
+* Boost.Asio offers _strands_, which **serialize the execution of multiple callback handlers that are called from concurrent instances of the `run` function**.
+  * a strand is like a funnel that forces multiple operations to occur in order.
+
+* 
