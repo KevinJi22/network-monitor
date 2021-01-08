@@ -104,4 +104,16 @@
 * Boost.Asio offers _strands_, which **serialize the execution of multiple callback handlers that are called from concurrent instances of the `run` function**.
   * a strand is like a funnel that forces multiple operations to occur in order.
 
-* 
+#### Websockets
+
+* each websocket connection starts with a **handshake**
+* a WebSocket client initiates a connection by sending an HTTP request to the server. The request asks the server to upgrade the current connection to a WebSocket one.
+* a `101` response means that the handshake was successful and the WebSocket connection is established.
+* the connection will stay alive without the need for additional session management
+* Boost.Beast is a header-only library that extends Boost.Asio with higher-level APIs for networking
+* Boost.Beast offers a `websocket::stream` class with the following interface:
+  * it has an API to initiate and close a connection: `handshake, async_handshake, close, async_close`
+  * it provdes APIs to read/write to WebSocket connection, which can be used to send/receive messages: `read, async_read, write, async_write`.
+
+* note: the `websocket::stream` class requires a `NextLayer` template parameter. This is the _transport layer_ for the WebSocket connection.
+* We need to pass a TCP socket stream to the `websocket::stream` template.
